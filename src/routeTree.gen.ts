@@ -9,12 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BankRouteImport } from './routes/bank'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BankIdRouteImport } from './routes/bank.$id'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BankRoute = BankRouteImport.update({
+  id: '/bank',
+  path: '/bank',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,40 +35,70 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BankIdRoute = BankIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BankRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bank': typeof BankRouteWithChildren
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/bank/$id': typeof BankIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bank': typeof BankRouteWithChildren
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/bank/$id': typeof BankIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bank': typeof BankRouteWithChildren
   '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/bank/$id': typeof BankIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths: '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to: '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
+  id: '__root__' | '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BankRoute: typeof BankRouteWithChildren
   LoginRoute: typeof LoginRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bank': {
+      id: '/bank'
+      path: '/bank'
+      fullPath: '/bank'
+      preLoaderRoute: typeof BankRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -65,12 +108,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bank/$id': {
+      id: '/bank/$id'
+      path: '/$id'
+      fullPath: '/bank/$id'
+      preLoaderRoute: typeof BankIdRouteImport
+      parentRoute: typeof BankRoute
+    }
   }
 }
 
+interface BankRouteChildren {
+  BankIdRoute: typeof BankIdRoute
+}
+
+const BankRouteChildren: BankRouteChildren = {
+  BankIdRoute: BankIdRoute,
+}
+
+const BankRouteWithChildren = BankRoute._addFileChildren(BankRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BankRoute: BankRouteWithChildren,
   LoginRoute: LoginRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
