@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ExamRouteImport } from './routes/exam'
 import { Route as BankRouteImport } from './routes/bank'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BankIdRouteImport } from './routes/bank.$id'
@@ -23,6 +24,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamRoute = ExamRouteImport.update({
+  id: '/exam',
+  path: '/exam',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BankRoute = BankRouteImport.update({
@@ -44,6 +50,7 @@ const BankIdRoute = BankIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bank': typeof BankRouteWithChildren
+  '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/bank/$id': typeof BankIdRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bank': typeof BankRouteWithChildren
+  '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/bank/$id': typeof BankIdRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bank': typeof BankRouteWithChildren
+  '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/bank/$id': typeof BankIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
+  fullPaths: '/' | '/bank' | '/exam' | '/login' | '/settings' | '/bank/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
-  id: '__root__' | '/' | '/bank' | '/login' | '/settings' | '/bank/$id'
+  to: '/' | '/bank' | '/exam' | '/login' | '/settings' | '/bank/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/bank'
+    | '/exam'
+    | '/login'
+    | '/settings'
+    | '/bank/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BankRoute: typeof BankRouteWithChildren
+  ExamRoute: typeof ExamRoute
   LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
 }
@@ -92,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exam': {
+      id: '/exam'
+      path: '/exam'
+      fullPath: '/exam'
+      preLoaderRoute: typeof ExamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bank': {
@@ -131,6 +155,7 @@ const BankRouteWithChildren = BankRoute._addFileChildren(BankRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BankRoute: BankRouteWithChildren,
+  ExamRoute: ExamRoute,
   LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
 }
