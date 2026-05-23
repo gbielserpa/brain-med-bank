@@ -81,6 +81,7 @@ function Header() {
           <Link to="/" activeOptions={{ exact: true }} className="rounded px-3 py-1.5 hover:bg-muted [&.active]:bg-muted [&.active]:font-medium">Início</Link>
           <Link to="/bank" className="rounded px-3 py-1.5 hover:bg-muted [&.active]:bg-muted [&.active]:font-medium">Banco</Link>
           <Link to="/exam" className="rounded px-3 py-1.5 hover:bg-muted [&.active]:bg-muted [&.active]:font-medium">Prova</Link>
+          <Link to="/notes" className="rounded px-3 py-1.5 hover:bg-muted [&.active]:bg-muted [&.active]:font-medium">Anotações</Link>
           <Link to="/settings" className="rounded px-3 py-1.5 hover:bg-muted [&.active]:bg-muted [&.active]:font-medium">Configurações</Link>
           <button
             onClick={() => supabase.auth.signOut()}

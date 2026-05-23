@@ -73,7 +73,14 @@ function BankDetail() {
         {q.explanation && (
           <div className="mt-6 rounded-md border bg-muted/30 p-4">
             <h3 className="text-sm font-medium">Comentário</h3>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{q.explanation}</p>
+            <div className="mt-1 prose prose-sm max-w-none text-sm text-muted-foreground"
+              dangerouslySetInnerHTML={{ __html: q.explanation }} />
+          </div>
+        )}
+
+        {(q as any).hint && (
+          <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+            <span className="font-medium">Dica: </span>{(q as any).hint}
           </div>
         )}
 

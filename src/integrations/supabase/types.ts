@@ -41,12 +41,48 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          question_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          question_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          question_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions: {
         Row: {
           alternatives: Json
           correct_letter: string
           created_at: string
           explanation: string | null
+          hint: string | null
           id: string
           image_url: string | null
           institution: string | null
@@ -63,6 +99,7 @@ export type Database = {
           correct_letter: string
           created_at?: string
           explanation?: string | null
+          hint?: string | null
           id?: string
           image_url?: string | null
           institution?: string | null
@@ -79,6 +116,7 @@ export type Database = {
           correct_letter?: string
           created_at?: string
           explanation?: string | null
+          hint?: string | null
           id?: string
           image_url?: string | null
           institution?: string | null
