@@ -57,7 +57,7 @@ function Exam() {
     queryFn: async () => {
       const { data, error } = await supabase.from("questions").select("*");
       if (error) throw error;
-      return data as Q[];
+      return data as unknown as Q[];
     },
   });
 
