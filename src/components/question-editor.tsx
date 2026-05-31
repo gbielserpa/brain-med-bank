@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { parseAlternatives } from "@/lib/parser";
 import { uploadQuestionImage, getSignedImageUrl } from "@/lib/image";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,7 +110,7 @@ export function QuestionEditor({ editId, onSaved }: Props) {
       setTags(data.tags ?? []);
       const html = data.explanation ?? "";
       setExplanationHtml(html);
-      if (explanationRef.current) explanationRef.current.innerHTML = html;
+      if (explanationRef.current) explanationRef.current.innerHTML = sanitizeHtml(html);
     })();
   }, [editId]);
 
@@ -192,7 +193,9 @@ export function QuestionEditor({ editId, onSaved }: Props) {
       const path = await uploadQuestionImage(user.id, file);
       const url = await getSignedImageUrl(path);
       if (!url) throw new Error("Falha ao gerar URL");
-      exec("insertHTML", `<img src="${url}" alt="" data-path="${path}" style="max-width:100%;border-radius:6px;margin:8px 0" />`);
+      const safeUrl = url.replace(/["<>]/g, "");
+      const safePath = path.replace(/["<>]/g, "");
+      exec("insertHTML", `<img src="${safeUrl}" alt="" data-path="${safePath}" style="max-width:100%;border-radius:6px;margin:8px 0" />`);
     } catch (e: any) {
       toast.error(e.message ?? "Erro ao inserir imagem");
     }
@@ -233,7 +236,7 @@ export function QuestionEditor({ editId, onSaved }: Props) {
         institution: institution.trim() || null,
         year: yearToInt(yearChoice),
         relevance: showRelevance && relevance != null ? relevance : 3,
-        explanation: explanationHtml.trim() || null,
+        explanation: sanitizeHtml(explanationHtml.trim()) || null,
         hint: hint.trim() || null,
         tags,
       };

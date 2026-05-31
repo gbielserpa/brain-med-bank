@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { getSignedImageUrl } from "@/lib/image";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { toast } from "sonner";
 import { Lightbulb, Highlighter, StickyNote } from "lucide-react";
 
@@ -265,7 +266,7 @@ function Exam() {
               </p>
               {q.explanation && (
                 <div className="mt-2 text-xs text-muted-foreground prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{ __html: q.explanation }} />
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(q.explanation ?? "") }} />
               )}
             </Card>
           );
