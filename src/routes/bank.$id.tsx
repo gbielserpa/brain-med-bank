@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getSignedImageUrl } from "@/lib/image";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const Route = createFileRoute("/bank/$id")({ component: BankDetail });
 
@@ -74,7 +75,7 @@ function BankDetail() {
           <div className="mt-6 rounded-md border bg-muted/30 p-4">
             <h3 className="text-sm font-medium">Comentário</h3>
             <div className="mt-1 prose prose-sm max-w-none text-sm text-muted-foreground"
-              dangerouslySetInnerHTML={{ __html: q.explanation }} />
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(q.explanation) }} />
           </div>
         )}
 
